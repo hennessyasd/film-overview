@@ -1,0 +1,35 @@
+.trailer-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #000;
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
+  padding-top: 20px;
+}
+
+.react-player-container {
+  width: 80%;
+  max-width: 1000px;
+  aspect-ratio: 16 / 9;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+}
+
+.back-button {
+  margin-top: 20px;
+  padding: 10px 20px;
+  background: #e50914;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background .3s ease;
+}
+
+.back-button:hover {
+  background: #b20710;
+}

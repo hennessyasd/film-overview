@@ -1,0 +1,102 @@
+.movie-carousel-container {
+  width: 100%;
+  max-width: 100vw;
+  margin: 0 auto;
+  overflow: hidden;
+  background: #111;
+}
+
+.carousel-root {
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.movie-card {
+  position: relative;
+  display: flex;
+  justify-content: space-evenly;
+  background: #111111;
+  border-top: 1px solid red;
+  border-bottom: 1px solid red;
+}
+
+.carousel .slide img {
+    width: 100%;
+  height: 600px;
+  object-fit: cover;
+  transition: transform 0.8s ease;
+}
+.carousel .slide img:hover {
+    transform: scale(1.05);
+}
+
+.movie-poster > img {
+  width: 100%;
+  height: 600px;
+  object-fit: cover;
+  transition: transform 0.8s ease;
+}
+
+.movie-poster > img:hover {
+  transform: scale(1.05);
+}
+
+.movie-title {
+  position: absolute;
+  bottom: 20px;
+  background: rgba(0, 0, 0, 0.6);
+  padding: 12px 24px;
+  border-radius: 10px;
+}
+
+.movie-title h3 {
+  color: #fff;
+  font-family: 'Poppins', sans-serif;
+  font-size: 1.5rem;
+  text-align: center;
+}
+
+.movie-buttons-container {
+  position: absolute;
+  bottom: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.play-button-icon {
+  color: gold;
+  font-size: 3rem;
+  transition: .3s;
+  cursor: pointer;
+}
+
+.play-button-icon:hover {
+  color: #fff;
+  font-size: 4rem;
+}
+
+
+.review-btn {
+  background-color: #e50914;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s;
+  font-weight: 500;
+  margin-top: 12px;
+}
+
+.review-btn:hover {
+  background-color: #e50914;
+}
+
+
+
+@media (max-width: 768px) {
+  .movie-poster img {
+    height: 400px;
+  }
+}

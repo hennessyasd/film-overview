@@ -1,0 +1,1 @@
+# React + Vite, MongoDB, Java, Spring boot

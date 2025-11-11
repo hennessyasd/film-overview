@@ -1,0 +1,99 @@
+.movie-details-page {
+  background: #0f0f0f;
+  color: #fff;
+  min-height: 100vh;
+}
+
+.md-trailer {
+  display: flex;
+  justify-content: center;
+  padding: 30px 0;
+}
+
+.md-trailer iframe {
+  width: 80%;
+  height: 460px;
+  border-radius: 8px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+}
+
+.md-back {
+    background: #e50914;
+    color: #fff;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.md-main {
+  display: flex;
+  gap: 30px;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 20px;
+}
+
+.md-left { 
+  flex: 0 0 240px; 
+}
+.md-center {
+  flex: 1 1 600px; max-width: 700px; text-align: left; 
+}
+.md-right {
+  flex: 0 0 220px; display: flex; flex-direction: column; gap: 20px; align-items: center;
+}
+
+.md-poster {
+  width: 220px; border-radius: 8px; box-shadow: 0 8px 30px rgba(0,0,0,0.6); 
+}
+.md-title { 
+  color: #e50914; margin-bottom: 8px; 
+}
+
+.md-rating { 
+  text-align: center; background:#111; padding:12px 16px; border-radius:8px; width:100%; 
+}
+.md-rating-value { 
+  font-size: 2rem; color: gold; margin-top:8px; 
+}
+
+.md-bottom { 
+  display:flex; justify-content:center; padding: 30px; 
+}
+.md-reviews { 
+  width: 100%; max-width: 1000px;
+ }
+.md-reviews-list { 
+  background: #121212; padding: 12px; border-radius: 8px; max-height: 220px; overflow-y: auto; 
+}
+.md-review-item { 
+  padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.03); 
+}
+.md-add-review { 
+  margin-top: 12px; display:flex; gap:10px; flex-direction: column; 
+}
+.md-add-review textarea { 
+  width:100%; min-height:80px; border-radius:6px; padding:8px; resize:vertical; background:#fff; color:#000;
+ }
+.md-add-review button { 
+  align-self:flex-end; background:#e50914; color:#fff; border:none; padding:8px 14px; border-radius:6px; cursor:pointer; 
+}
+
+@media (max-width: 900px) {
+  .md-trailer iframe { 
+    width: 95%; height: 260px;
+   }
+  .md-main { 
+    flex-direction: column; align-items:center; padding: 12px; 
+  }
+  .md-left, .md-right { 
+    flex: none; 
+  }
+  .md-center { 
+    max-width: 100%; text-align:center; 
+  }
+  .md-reviews-list { 
+    max-height: 180px; 
+  }
+}
