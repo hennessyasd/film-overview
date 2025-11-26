@@ -17,11 +17,18 @@ const Trailer = () => {
           playing
           width="100%"
           height="100%"
+          
           config={{
-            youtube: { playerVars: { modestbranding: 1, rel: 0 } },
+            youtube: { 
+              playerVars: { 
+                modestbranding: 1, 
+                rel: 0 
+              } 
+            },
           }}
         />
       </div>
+      
       <button className="back-button" onClick={() => navigate("/")}>
         ← Back to Movies
       </button>

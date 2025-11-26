@@ -12,12 +12,25 @@ public class MovieService {
     @Autowired
     private MovieRepository movieRepository;
 
+    @Autowired
+    private S3Service s3Service;
+
     public List<Movie> allMovies() {
         return movieRepository.findAll();
     }
 
     public Optional<Movie> singleMovie(String imdbId) {
-        return movieRepository.findMovieByImdbId(imdbId);
+        Optional<Movie> movie = movieRepository.findMovieByImdbId(imdbId);
+
+        if (movie.isPresent()) {
+            Movie m = movie.get();
+            if (m.getVideoPath() != null && !m.getVideoPath().isEmpty()) {
+                String url = s3Service.generatePresignedUrl(m.getVideoPath());
+                m.setStreamingUrl(url);
+            }
+        }
+
+        return movie;
     }
 
     public List<Movie> searchMovies(String title) {

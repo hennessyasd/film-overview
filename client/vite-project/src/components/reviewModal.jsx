@@ -3,7 +3,8 @@ import { Modal, Box, Typography, Button, TextField, Chip } from "@mui/material";
 import api from "../api/axios-config";
 import "../static/CSS/ReviewModal.css";
 
-const ReviewModal = ({ open, onClose, movie }) => {
+const ReviewModal = (props) => {
+  const { open, onClose, movie } = props;
   const [reviewText, setReviewText] = useState("");
   const [message, setMessage] = useState("");
 

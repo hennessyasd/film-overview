@@ -19,7 +19,7 @@ function App() {
       setMovies(response.data);
       setFilteredMovies(response.data);
     } catch (e) {
-      console.error("Ошибка загрузки фильмов:", e);
+      console.error("Failed to load films:", e);
     }
   };
 

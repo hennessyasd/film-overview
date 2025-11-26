@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.DocumentReference;
 import java.util.List;
@@ -23,6 +24,10 @@ public class Movie {
     private String poster;
     private List<String> genres;
     private List<String> backdrops;
+    private String description;
+    private String videoPath;
+    @Transient
+    private String streamingUrl;
     @DocumentReference
     private List<Review> reviewIds;
 }

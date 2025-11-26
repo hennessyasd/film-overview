@@ -15,27 +15,21 @@ const MovieDetails = () => {
 
   useEffect(() => {
     if (!imdbId) return;
+    
     setLoading(true);
 
-    // 1) load movie
     api.get(`/api/v1/movies/${imdbId}`)
       .then(res => {
         const data = res.data;
+        let movieData = null;
         if (data && data.imdbId) {
-          setMovie(data);
-        } else if (
-          data &&
-          Object.prototype.hasOwnProperty.call(data, "present") &&
-          data.present === true &&
-          Object.prototype.hasOwnProperty.call(data, "value")
-        ) {
-          setMovie(data.value);
-        } else if (
-          data &&
-          Object.prototype.hasOwnProperty.call(data, "value")
-        ) {
-          setMovie(data.value);
+            movieData = data;
+        } else if (data && data.present && data.value) {
+            movieData = data.value;
+        } else if (data && data.value) {
+            movieData = data.value;
         }
+        setMovie(movieData);
       })
       .catch(err => {
         console.error("movie load error:", err);
@@ -63,10 +57,14 @@ const MovieDetails = () => {
     if (!newReview.trim()) return;
     setSubmitting(true);
     try {
-      await api.post("/api/v1/reviews", { reviewBody: newReview.trim(), imdbId });
+      await api.post("/api/v1/reviews", { 
+        reviewBody: newReview.trim(), imdbId 
+      });
       const resp = await api.get(`/api/v1/reviews/movie/${imdbId}`);
+
       setReviews(resp.data || []);
       setNewReview("");
+      
     } catch (err) {
       console.error("submit review error", err);
     } finally {
@@ -74,8 +72,8 @@ const MovieDetails = () => {
     }
   };
 
-  if (loading) return <div className="md-loading">Загрузка фильма...</div>;
-  if (!movie) return <div className="md-no-movie">Фильм не найден</div>;
+  if (loading) return <div className="md-loading">Loading movie...</div>;
+  if (!movie) return <div className="md-no-movie">Movie not found</div>;
 
   const trailerEmbed = (() => {
     if (!movie.trailerLink) return null;
@@ -87,19 +85,43 @@ const MovieDetails = () => {
 
   return (
     <div className="movie-details-page">
-      <div className="md-trailer">
-        {trailerEmbed ? (
-          <iframe
-            src={trailerEmbed}
-            title={`${movie.title} trailer`}
-            frameBorder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-          />
-        ) : (
-          <div className="no-trailer">Trailer not available</div>
+      <div className="md-media-section" style={{ width: '100%', maxWidth: '100%', display: 'flex', justifyContent: 'center', backgroundColor: '#000' }}>
+        {movie.streamingUrl ? (
+
+          <div className="video-player-container" style={{ width: '100%', maxWidth: '1200px', padding: '20px 0' }}>
+            <video 
+                width="100%" 
+                height="auto" 
+                controls 
+                autoPlay={false}
+                controlsList="nodownload"
+                poster={movie.backdrops?.[0] || movie.poster}
+                style={{ borderRadius: '8px', boxShadow: '0 4px 20px rgba(0,0,0,0.5)', maxHeight: '80vh' }}
+            >
+                <source src={movie.streamingUrl} type="video/mp4" />
+                Your browser does not support the video tag :(.
+            </video>
+          </div>
+        
+      ) : (
+
+          <div className="md-trailer" style={{ width: '100%' }}>
+            {trailerEmbed ? (
+              <iframe
+                src={trailerEmbed}
+                title={`${movie.title} trailer`}
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              />
+            ) : (
+              <div className="no-trailer">Trailer not available</div>
+            )}
+          </div>
+
         )}
       </div>
+      
 
       <div className="md-main">
         <div className="md-left">
@@ -108,9 +130,10 @@ const MovieDetails = () => {
 
         <div className="md-center">
           <h1 className="md-title">{movie.title}</h1>
-          <p><strong>Release date:</strong> {movie.releaseDate}</p>
-          <p><strong>Genres:</strong> {movie.genres ? movie.genres.join(", ") : "—"}</p>
-          <p className="md-description">{movie.description || ""}</p>
+          <p><strong>Release date: </strong> {movie.releaseDate}</p> <br />
+          <p><strong>Genres: </strong> {movie.genres ? movie.genres.join(", ") : "—"}</p>
+          <br />
+          <p className="md-description"><strong>Description: <br /></strong>{movie.description || ""}</p>
         </div>
 
         <div className="md-right">
@@ -119,13 +142,13 @@ const MovieDetails = () => {
             <div className="md-rating-value">⭐{rating} / 10.0</div>
           </div>
 
-          <button className="md-back" onClick={() => navigate("/")}>← Вернуться на главную</button>
+          <button className="md-back" onClick={() => navigate("/")}>← Back to main page</button>
         </div>
       </div>
 
       <div className="md-bottom">
         <div className="md-reviews">
-          <h3>Отзывы</h3>
+          <h3>Reviews</h3>
           <div className="md-reviews-list">
             {reviews && reviews.length > 0 ? (
               reviews.map((r, i) => (
@@ -134,7 +157,7 @@ const MovieDetails = () => {
                 </div>
               ))
             ) : (
-              <div className="md-no-reviews">Пока нет отзывов.</div>
+              <div className="md-no-reviews">No reviews yet.</div>
             )}
           </div>
 
@@ -142,10 +165,10 @@ const MovieDetails = () => {
             <textarea
               value={newReview}
               onChange={(e) => setNewReview(e.target.value)}
-              placeholder="Напишите свой отзыв..."
+              placeholder="Write your review..."
             />
             <button onClick={submitReview} disabled={submitting || !newReview.trim()}>
-              {submitting ? "Отправка..." : "Отправить отзыв"}
+              {submitting ? "Sending..." : "Submit Review"}
             </button>
           </div>
         </div>

@@ -1,20 +1,27 @@
-import "../static/CSS/Hero.css"
-import "react-responsive-carousel/lib/styles/carousel.min.css";
+import { NavLink, useNavigate } from "react-router-dom";
+import { useState } from "react";
 import { Carousel } from "react-responsive-carousel";
-import { Paper } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCirclePlay } from "@fortawesome/free-solid-svg-icons";
-import { NavLink } from "react-router-dom";
-import { useState } from "react";
+import { Paper } from "@mui/material";
 import ReviewModal from "./reviewModal";
+
+import "../static/CSS/Hero.css"
+import "react-responsive-carousel/lib/styles/carousel.min.css";
 
 const Hero = ({ movies }) => {
   const [selectedMovie, setSelectedMovie] = useState(null);
   const [openReview, setOpenReview] = useState(false);
+  const navigate = useNavigate();
 
-  if (!movies || movies.length === 0) {
-    return <div className="movie-carousel-empty">Загрузка фильмов...</div>;
-  }
+  if (!movies || movies.length === 0) return <div className="movie-carousel-empty">Загрузка фильмов...</div>;
+
+  const handleMovieClick = (imdbId) => {
+    navigate(`/movies/${imdbId}`);
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth" });
+  };
 
   const handleOpenReview = (movie) => {
     setSelectedMovie(movie);
@@ -40,7 +47,7 @@ const Hero = ({ movies }) => {
         {movies.map((movie) => (
           <Paper key={movie.imdbId || movie.id} elevation={6}>
             <div className="movie-card">
-              <div className="movie-poster">
+              <div className="movie-poster" onClick={() => handleMovieClick(movie.imdbId)}>
                 <img src={movie.poster} alt={movie.title} />
               </div>
 

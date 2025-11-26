@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "../static/CSS/MoviesGrid.css";
 
 const MoviesGrid = () => {
   const [movies, setMovies] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const moviesPerPage = 12;
+  const navigate = useNavigate();
+  
+  const moviesPerPage = 5;
 
   useEffect(() => {
     fetch("http://localhost:8080/api/v1/movies")
@@ -21,8 +23,18 @@ const MoviesGrid = () => {
   const changePage = (page) => {
     if (page >= 1 && page <= totalPages) {
       setCurrentPage(page);
-      window.scrollTo({ top: 0, behavior: "smooth" });
+      window.scrollTo({ 
+        top: 0, 
+        behavior: "smooth" 
+      });
     }
+  };
+
+  const handleMovieClick = (imdbId) => {
+    navigate(`/movies/${imdbId}`);
+    window.scrollTo({ 
+      top: 0, 
+      behavior: "smooth" });
   };
 
   return (
@@ -31,7 +43,9 @@ const MoviesGrid = () => {
 
       <div className="movies-grid">
         {currentMovies.map((movie) => (
-          <div key={movie.imdbId} className="movie-item">
+          <div key={movie.imdbId} className="movie-item" 
+          onClick={() => handleMovieClick(movie.imdbId)
+          }>
             <Link to={`/movies/${movie.imdbId}`} className="movie-link">
               <img src={movie.poster} alt={movie.title} />
               <p className="movie-name">{movie.title}</p>
