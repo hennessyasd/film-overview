@@ -1,20 +1,23 @@
-import { Outlet } from "react-router-dom";
-import Header from "./Header"
-import MoviesGrid from "./MoviesGrid";
+import { Outlet, useLocation } from "react-router-dom";
+import Header from "./Header";
 import Footer from "./Footer";
+import MoviesGrid from "./MoviesGrid";
+
 
 const Layout = (props) => {
     const { onSearch } = props;
+    const location = useLocation();
+    const hideGridPaths = ["/login", "/register"];
+    const shouldShowGrid = !hideGridPaths.includes(location.pathname);
     
     return(
         <>
-        <Header onSearch={onSearch} />
-        <main id="main">
-            <Outlet />
-            <MoviesGrid />
+            <Header onSearch={onSearch} />
+            <main id="main" style={{ minHeight: '80vh' }}>
+                <Outlet />
+                {shouldShowGrid && <MoviesGrid />} 
+            </main>
             <Footer />
-        </main>
-        <footer id="footer"></footer>
         </>
     )
 }

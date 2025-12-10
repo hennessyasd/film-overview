@@ -1,11 +1,14 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import api from "../api/axios-config";
+import { AuthContext } from "../context/AuthProvider";
 import "../static/CSS/MovieDetails.css";
 
 const MovieDetails = () => {
   const { imdbId } = useParams();
   const navigate = useNavigate();
+  const { auth } = useContext(AuthContext);
+
   const [movie, setMovie] = useState(null);
   const [reviews, setReviews] = useState([]);
   const [rating, setRating] = useState("...");
@@ -20,8 +23,8 @@ const MovieDetails = () => {
 
     api.get(`/api/v1/movies/${imdbId}`)
       .then(res => {
-        const data = res.data;
         let movieData = null;
+        const data = res.data;
         if (data && data.imdbId) {
             movieData = data;
         } else if (data && data.present && data.value) {
@@ -54,6 +57,11 @@ const MovieDetails = () => {
   }, [imdbId]);
 
   const submitReview = async () => {
+    if (!auth.token) {
+        navigate("/login");
+        return;
+    }
+
     if (!newReview.trim()) return;
     setSubmitting(true);
     try {
@@ -72,6 +80,22 @@ const MovieDetails = () => {
     }
   };
 
+  const handleDeleteReview = async (reviewId) => {
+    if (!window.confirm("Are you sure you want to delete this review?")) return;
+
+    try {
+        await api.delete(`/api/v1/reviews/${reviewId}`);
+        setReviews((prev) => prev.filter((r) => {
+            const currentId = typeof r.id === 'object' ? r.id.toString() : r.id;
+            const targetId = typeof reviewId === 'object' ? reviewId.toString() : reviewId;
+            return currentId !== targetId;
+        }));
+    } catch (err) {
+        console.error("Failed to delete review", err);
+        alert("Failed to delete review. Ensure you are an Admin.");
+    }
+  };
+
   if (loading) return <div className="md-loading">Loading movie...</div>;
   if (!movie) return <div className="md-no-movie">Movie not found</div>;
 
@@ -83,11 +107,12 @@ const MovieDetails = () => {
     return movie.trailerLink;
   })();
 
+  const isAdmin = auth?.roles && auth.roles.includes("ADMIN");
+
   return (
     <div className="movie-details-page">
       <div className="md-media-section" style={{ width: '100%', maxWidth: '100%', display: 'flex', justifyContent: 'center', backgroundColor: '#000' }}>
         {movie.streamingUrl ? (
-
           <div className="video-player-container" style={{ width: '100%', maxWidth: '1200px', padding: '20px 0' }}>
             <video 
                 width="100%" 
@@ -99,12 +124,10 @@ const MovieDetails = () => {
                 style={{ borderRadius: '8px', boxShadow: '0 4px 20px rgba(0,0,0,0.5)', maxHeight: '80vh' }}
             >
                 <source src={movie.streamingUrl} type="video/mp4" />
-                Your browser does not support the video tag :(.
+                Your browser does not support the video tag.
             </video>
           </div>
-        
-      ) : (
-
+        ) : (
           <div className="md-trailer" style={{ width: '100%' }}>
             {trailerEmbed ? (
               <iframe
@@ -118,11 +141,9 @@ const MovieDetails = () => {
               <div className="no-trailer">Trailer not available</div>
             )}
           </div>
-
         )}
       </div>
       
-
       <div className="md-main">
         <div className="md-left">
           <img src={movie.poster} alt={movie.title} className="md-poster" />
@@ -151,11 +172,47 @@ const MovieDetails = () => {
           <h3>Reviews</h3>
           <div className="md-reviews-list">
             {reviews && reviews.length > 0 ? (
-              reviews.map((r, i) => (
-                <div className="md-review-item" key={i}>
-                  <div className="md-review-body">{r.body}</div>
-                </div>
-              ))
+              reviews.map((r, i) => {
+                const reviewId = r.id;
+                
+                return (
+                    <div className="md-review-item" key={reviewId || i}>
+                        <div className="md-review-content" style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
+                            <div className="md-review-name"
+                              style={{ color: '#ff4d4d', 
+                              fontWeight: 'bold',
+                              marginBottom: '10px',
+                              fontSize: '1rem', 
+                              alignSelf: 'flex-start'}}>
+                                {r.username || "Anonymous"}
+                            </div>
+                            
+                            <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
+                                <div className="md-review-body">{r.body}</div>
+                                
+                                {isAdmin && (
+                                    <button 
+                                        onClick={() => handleDeleteReview(reviewId)}
+                                        style={{
+                                            backgroundColor: 'transparent',
+                                            border: '1px solid #ff4d4d',
+                                            color: '#ff4d4d',
+                                            borderRadius: '4px',
+                                            padding: '2px 8px',
+                                            cursor: 'pointer',
+                                            fontSize: '0.8rem',
+                                            marginLeft: '15px',
+                                            alignSelf: 'flex-start'
+                                        }}
+                                    >
+                                        Delete
+                                    </button>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                );
+              })
             ) : (
               <div className="md-no-reviews">No reviews yet.</div>
             )}
@@ -165,7 +222,7 @@ const MovieDetails = () => {
             <textarea
               value={newReview}
               onChange={(e) => setNewReview(e.target.value)}
-              placeholder="Write your review..."
+              placeholder={auth.token ? "Write your review..." : "Please login to write a review"}
             />
             <button onClick={submitReview} disabled={submitting || !newReview.trim()}>
               {submitting ? "Sending..." : "Submit Review"}

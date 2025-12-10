@@ -1,11 +1,14 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useContext } from "react";
 import { useNavigate, NavLink } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faVideoSlash, faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import api from "../api/axios-config";
+import { AuthContext } from "../context/AuthProvider";
 import "../static/CSS/Header.css";
 
 const Header = () => {
+  const { auth, logout } = useContext(AuthContext);
+
   const [showSearch, setShowSearch] = useState(false);
   const [query, setQuery] = useState("");
   const [error, setError] = useState("");
@@ -84,8 +87,31 @@ const Header = () => {
             <FontAwesomeIcon icon={faMagnifyingGlass} />
             <span>Search</span>
           </button>
-          <NavLink to="/login" className="nav-btn">Login</NavLink>
-          <NavLink to="/register" className="nav-btn">Register</NavLink>
+
+          {auth.token ? (
+             <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+                <span style={{ 
+                    color: 'white', 
+                    fontWeight: 'bold', 
+                    textTransform: 'capitalize',
+                    fontSize: '1.4rem'
+                }}>
+                    {auth.username}
+                </span>
+                <button 
+                    onClick={logout} 
+                    className="nav-btn" 
+                    style={{ cursor: 'pointer', border: '1px solid white' }}
+                >
+                    Logout
+                </button>
+             </div>
+          ) : (
+             <>
+                <NavLink to="/login" className="nav-btn">Sign in</NavLink>
+             </>
+          )}
+
         </nav>
       </div>
 

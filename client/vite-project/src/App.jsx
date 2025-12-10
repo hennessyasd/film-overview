@@ -2,11 +2,14 @@ import './static/CSS/App.css';
 import api from "./api/axios-config";
 import { useState, useEffect } from 'react';
 import { Routes, Route } from 'react-router-dom';
+import { AuthProvider } from './context/AuthProvider';
 import Layout from "./components/Layout";
 import Home from './components/Home';
 import Trailer from './components/Trailer';
 import MoviesGrid from './components/MoviesGrid';
 import MovieDetails from './components/MovieDetails';
+import Login from './components/Login';
+import Register from './components/Register';
 
 function App() {
   const [movies, setMovies] = useState([]);
@@ -15,7 +18,6 @@ function App() {
   const getMovies = async () => {
     try {
       const response = await api.get("/api/v1/movies");
-      console.log("Movies loaded:", response.data);
       setMovies(response.data);
       setFilteredMovies(response.data);
     } catch (e) {
@@ -40,14 +42,18 @@ function App() {
   }, []);
 
   return (
-    <Routes>
-      <Route path="/" element={<Layout onSearch={handleSearch} />}>
-      <Route index element={<Home movies={filteredMovies} />} />
-      <Route path="Trailer/:ytTrailerId" element={<Trailer />} />
-      <Route path="/movies" element={<MoviesGrid />} />
-      <Route path="/movies/:imdbId" element={<MovieDetails />} />
-    </Route>
-    </Routes>
+    <AuthProvider>
+      <Routes>
+        <Route path="/" element={<Layout onSearch={handleSearch} />}>
+          <Route index element={<Home movies={filteredMovies} />} />
+          <Route path="Trailer/:ytTrailerId" element={<Trailer />} />
+          <Route path="/movies" element={<MoviesGrid />} />
+          <Route path="/movies/:imdbId" element={<MovieDetails />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+        </Route>
+      </Routes>
+    </AuthProvider>
   );
 }
 

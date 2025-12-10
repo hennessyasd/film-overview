@@ -17,6 +17,10 @@
   border-radius: 12px;
   overflow: hidden;
   box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+  -webkit-border-radius: 12px;
+  -moz-border-radius: 12px;
+  -ms-border-radius: 12px;
+  -o-border-radius: 12px;
 }
 
 .back-button {
@@ -28,6 +32,14 @@
   border-radius: 8px;
   cursor: pointer;
   transition: background .3s ease;
+  -webkit-border-radius: 8px;
+  -moz-border-radius: 8px;
+  -ms-border-radius: 8px;
+  -o-border-radius: 8px;
+  -webkit-transition: background .3s ease;
+  -moz-transition: background .3s ease;
+  -ms-transition: background .3s ease;
+  -o-transition: background .3s ease;
 }
 
 .back-button:hover {

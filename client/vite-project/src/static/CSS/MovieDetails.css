@@ -71,13 +71,48 @@
   padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.03); 
 }
 .md-add-review { 
-  margin-top: 12px; display:flex; gap:10px; flex-direction: column; 
+  margin-top: 12px; 
+  display:flex; 
+  gap:10px; 
+  flex-direction: column; 
 }
-.md-add-review textarea { 
-  width:100%; min-height:80px; border-radius:6px; padding:8px; resize:vertical; background:#fff; color:#000;
- }
-.md-add-review button { 
-  align-self:flex-end; background:#e50914; color:#fff; border:none; padding:8px 14px; border-radius:6px; cursor:pointer; 
+.md-add-review textarea {
+  width:100%;
+  min-height:80px;
+  border-radius:6px;
+  padding:8px;
+  resize: none;
+  background:#fff;
+  color:#000;
+  -webkit-border-radius:6px;
+  -moz-border-radius:6px;
+  -ms-border-radius:6px;
+  -o-border-radius:6px;
+}
+.md-add-review button {
+  align-self:flex-end;
+  background:#e50914;
+  color:#fff;
+  border:none;
+  padding:8px 14px;
+  border-radius:6px;
+  cursor:pointer;
+  -webkit-border-radius:6px;
+  -moz-border-radius:6px;
+  -ms-border-radius:6px;
+  -o-border-radius:6px;
+}
+.md-review-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.md-review-content {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 @media (max-width: 900px) {

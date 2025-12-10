@@ -24,13 +24,23 @@
 .logo-icon {
   color: white;
   font-size: 1.6rem;
+  transition: all .3s;
 }
 
 .logo-text {
   font-weight: 600;
   font-size: 2rem;
-  color: #e50914;
+  color: white;
   user-select: none;
+  transition: all .3s;
+  -webkit-transition: all .3s;
+  -moz-transition: all .3s;
+  -ms-transition: all .3s;
+  -o-transition: all .3s;
+}
+
+.logo-text:hover {
+  color: #e50914;
 }
 
 .nav-buttons {

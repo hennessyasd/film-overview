@@ -4,8 +4,10 @@ const Home = (props) => {
     const { movies } = props;
 
     return(
-        <Hero movies={movies}/>
+        <>
+            <Hero movies={movies}/>
+        </>
     )
 }
 
-export default Home
+export default Home;
